@@ -3,7 +3,7 @@ const search_button = document.querySelector(".search-button");
 const weathertext = document.querySelector(".weather");
 const datecontainer = document.querySelector(".date");
 const citytext = document.querySelector(".city");
-
+const timecont = document.querySelector(".time");
 
 var currentdate = new Date(); 
 var datetime = "Last Sync: " + currentdate.getDate() + "/"
@@ -62,6 +62,8 @@ const months = {
   12 : "December"
 }
 
+
+timecont.innerHTML = `${currentdate.getHours()}:${currentdate.getMinutes()}`;
 datecontainer.innerHTML = `${currentdate.getDate()}th of ${months[currentdate.getMonth()+1]}`;
 
 async function getWeather(lat, lon) {
