@@ -12,7 +12,7 @@ var datetime = "Last Sync: " + currentdate.getDate() + "/"
                 + currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
                 + currentdate.getSeconds();
-
+const dayNumber = currentdate.getDay();
 
 
 const weather_code_list = {
@@ -62,9 +62,19 @@ const months = {
   12 : "December"
 }
 
+const week = {
+  1 : "Monday",
+  2 : "Tuesday",
+  3 : "Wednesday",
+  4 : "Thursday",
+  5 : "Friday",
+  6 : "Saturday",
+  7 : "Sunday"
+}
+
 
 timecont.innerHTML = `${currentdate.getHours()}:${currentdate.getMinutes()}`;
-datecontainer.innerHTML = `${currentdate.getDate()}th of ${months[currentdate.getMonth()+1]}`;
+datecontainer.innerHTML = `${currentdate.getDate()}th of ${months[currentdate.getMonth()+1]}<br>${week[dayNumber]}`;
 
 async function getWeather(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`;
