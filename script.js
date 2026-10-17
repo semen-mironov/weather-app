@@ -83,28 +83,28 @@ async function getWeather(lat, lon) {
 }
 
 async function getCoords(cityName) {
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=ru`;
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en`;
   const response = await fetch(url);
   const data = await response.json();
   if (data.results?.length) {
     return { lat: data.results[0].latitude, lon: data.results[0].longitude };
   }
-  throw new Error('Город не найден');
+  throw new Error('City not found');
 }
 
 // 🔑 обратное геокодирование — координаты → название города
 async function getCityNameByCoords(lat, lon) {
   try {
-    const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ru`;
+    const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
     const res = await fetch(url);
     const data = await res.json();
-    return data.city || data.locality || data.principalSubdivision || 'Ваше местоположение';
+    return data.city || data.locality || data.principalSubdivision || 'Your geolocation';
   } catch {
-    return 'Ваше местоположение';
+    return 'Your location';
   }
 }
 
-async function showWeatherByCoords(lat, lon, cityName = 'Ваше местоположение') {
+async function showWeatherByCoords(lat, lon, cityName = 'Your location') {
   try {
     const data = await getWeather(lat, lon);
     const desc = weather_code_list[data.current.weather_code] ?? 'Unknown';
@@ -112,14 +112,14 @@ async function showWeatherByCoords(lat, lon, cityName = 'Ваше местопо
     weathertext.innerHTML =
       `${data.current.temperature_2m}${data.current_units.temperature_2m} ${desc}<br>`;
   } catch (err) {
-    weathertext.innerHTML = 'Не удалось получить погоду';
+    weathertext.innerHTML = 'Can`t get weather';
     console.error(err);
   }
 }
 
 async function initByGeolocation() {
   if (!navigator.geolocation) {
-    weathertext.innerHTML = 'Геолокация не поддерживается';
+    weathertext.innerHTML = 'Geolocation is not supported';
     return;
   }
 
@@ -130,7 +130,7 @@ async function initByGeolocation() {
       showWeatherByCoords(latitude, longitude, cityName);
     },
     (error) => {
-      weathertext.innerHTML = 'Разреши геолокацию или введи город вручную';
+      weathertext.innerHTML = 'Allow geolocation or type city manually';
       console.error('Geolocation error:', error.message);
     },
     { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
@@ -145,7 +145,7 @@ search_button.addEventListener("click", async () => {
     const coords = await getCoords(cityname);
     await showWeatherByCoords(coords.lat, coords.lon, cityname); // ← без двойного fetch
   } catch (err) {
-    weathertext.innerHTML = 'Не удалось получить погоду';
+    weathertext.innerHTML = 'Can`t get weather';
     console.error(err);
   }
 });
